@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Günün Sürprizi 🌌💖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a0813 0%, #4a1223 50%, #6e1a32 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 35px 25px;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      color: #ff758c;
+      font-size: 26px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(255, 117, 140, 0.3);
+    }
+
+    p.subtitle {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .box-wrapper {
+      margin: 15px 0;
+    }
+
+    .gift-emoji {
+      font-size: 75px;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.3s ease;
+      user-select: none;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    }
+
+    .gift-emoji:hover {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .note-card {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 20px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+    }
+
+    .note-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .note-text {
+      color: #ffffff;
+      font-size: 16px;
+      line-height: 1.5;
+      font-weight: 500;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .surprise-image {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #ff758c, #ff7eb3);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(255, 117, 140, 0.6);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .floating-element {
+      position: absolute;
+      bottom: -50px;
+      pointer-events: none;
+      animation: floatUpContinuous 6s linear infinite;
+      z-index: 1;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    }
+
+    @keyframes floatUpContinuous {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.9;
+      }
+      90% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(360deg) scale(1.3);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Günün Sürprizi 🎁</h1>
+    <p class="subtitle">Şansına ne çıkacak? Not, kedi ya da biz!</p>
+
+    <div class="box-wrapper">
+      <div class="gift-emoji" id="giftBox" onclick="surprizGetir()">🎁</div>
+    </div>
+
+    <button class="btn" onclick="surprizGetir()">Sürprizi Aç ✨</button>
+
+    <div class="note-card" id="noteCard">
+      <p class="note-text" id="noteText">Açmak için kutuya tıkla veya butona bas!</p>
+      <img id="surpriseImg" class="surprise-image" src="" alt="Sürpriz Görsel">
+    </div>
+  </div>
+
+  <script>
+    // 1. Kediler Klasöründeki Görseller
+    const kedilerResimleri = [
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (1).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (2).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (3).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (4).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (5).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (6).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (7).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (8).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (9).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (10).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (11).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (12).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (13).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (14).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (15).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (16).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (17).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (18).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (19).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (20).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03 (21).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.03.jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (1).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (2).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (3).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (4).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (5).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (6).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (7).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (8).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (9).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (10).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (11).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (12).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (13).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (14).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (15).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (16).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (17).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (18).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (19).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (20).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (21).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (22).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (23).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (24).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (25).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (26).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (27).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (28).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (29).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (30).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (31).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (32).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (33).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (34).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (35).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (36).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (37).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (38).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (39).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (40).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (41).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (42).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (43).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (44).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (45).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (46).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (47).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (48).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (49).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (50).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (51).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (52).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (53).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (54).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (55).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (56).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04 (57).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.04.jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (1).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (2).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (3).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (4).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (5).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (6).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (7).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (8).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (9).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (10).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (11).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (12).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (13).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (14).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05 (15).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.03.05.jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (1).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (2).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (3).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (4).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (5).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (6).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (7).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (8).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (9).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (10).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (11).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (12).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (13).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (14).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (15).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (16).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (17).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (18).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (19).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (20).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (21).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (22).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (23).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (24).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (25).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (26).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (27).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (28).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (29).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (30).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (31).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (32).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (33).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (34).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (35).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (36).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (37).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (38).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04 (39).jpeg",
+      "kediler/WhatsApp Image 2026-08-12 at 11.05.04.jpeg"
+    ];
+
+    // 2. Biz Klasöründeki Yeni JPEG Görseller (Videolar Elendi)
+    const bizResimleri = [
+      // 12.08.19 Grubu
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (2).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (3).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (4).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (5).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (6).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (7).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (8).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (9).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (10).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (11).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (12).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (13).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (14).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (15).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (16).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (17).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (18).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (19).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (20).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (21).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (22).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (23).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (24).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (25).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (26).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (27).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (28).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (29).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (30).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (31).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (32).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (33).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (34).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (35).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (36).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19 (37).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.19.jpeg",
+
+      // 12.08.20 Grubu
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (2).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (3).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (4).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (5).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (6).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (7).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (8).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (9).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (10).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (11).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (12).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (13).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (14).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (15).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (16).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (17).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (18).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (19).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (20).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (21).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20 (22).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 12.08.20.jpeg",
+
+      // 13.27 Grubu
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.10.jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.11 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.11 (2).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.11.jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.12 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.12 (2).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.12.jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.13 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.13.jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.14 (1).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.14 (2).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.14 (3).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.14 (4).jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.14.jpeg",
+      "Biz/WhatsApp Image 2026-08-12 at 13.27.15.jpeg"
+    ];
+
+    // 3. Notlar Listesi
+    const notlar = [
+      "Günün hatırlatması: Sen dünyadaki en tatlı insansın! 💕",
+      "Bugün kendine güzel bir kahve ısmarla ve gülümsemeyi unutma. ☕✨",
+      "Birlikte geçirdiğimiz ilk günü dün gibi hatırlıyorum, iyi ki hayatımdasın. 🌸",
+      "Bugün seni ekstra çok seviyorum! (Yarın daha da çok seveceğim) 🐻❤️",
+      "Birlikte en son ne zaman tatlı yemiştik? Bence bugün bir tatlı kaçamağı yapmalıyız! 🍰",
+      "Seninle gülmek, günün en güzel anı. 😊",
+      "Günün mesajı: Bugün karşılaştığın tüm zorlukları tereyağından kıl çeker gibi halledeceksin! 💪✨",
+      "Şu an bu nota bakıyorsun ya, bil ki tam şu an seni düşünüyorum. 💭💖"
+    ];
+
+    let sonSecimTuru = -1;
+
+    function surprizGetir() {
+      const noteCard = document.getElementById("noteCard");
+      const noteText = document.getElementById("noteText");
+      const surpriseImg = document.getElementById("surpriseImg");
+      const giftBox = document.getElementById("giftBox");
+
+      // Kutu Animasyonu
+      giftBox.style.transform = "scale(1.3) rotate(-10deg)";
+      setTimeout(() => {
+        giftBox.style.transform = "scale(1) rotate(0deg)";
+      }, 200);
+
+      noteCard.classList.remove("show");
+
+      setTimeout(() => {
+        // 3 Seçenek Arasında Rastgele Seçim (0: Not, 1: Kedi, 2: Biz)
+        let secim;
+        do {
+          secim = Math.floor(Math.random() * 3);
+        } while (secim === sonSecimTuru);
+        sonSecimTuru = secim;
+
+        if (secim === 0) {
+          // NOT ÇIKMA MANTIĞI
+          const yeniNotIndex = Math.floor(Math.random() * notlar.length);
+          noteText.textContent = notlar[yeniNotIndex];
+          noteText.style.display = "block";
+          surpriseImg.style.display = "none";
+        } 
+        else if (secim === 1) {
+          // KEDİ ÇIKMA MANTIĞI
+          const yeniKediIndex = Math.floor(Math.random() * kedilerResimleri.length);
+          noteText.textContent = "Günün Kedisi! 🐾";
+          noteText.style.display = "block";
+          surpriseImg.src = kedilerResimleri[yeniKediIndex];
+          surpriseImg.style.display = "block";
+        } 
+        else {
+          // BİZ ÇIKMA MANTIĞI
+          const yeniBizIndex = Math.floor(Math.random() * bizResimleri.length);
+          noteText.textContent = "En Güzel Anılarımızdan Biri... 📸💖";
+          noteText.style.display = "block";
+          surpriseImg.src = bizResimleri[yeniBizIndex];
+          surpriseImg.style.display = "block";
+        }
+
+        noteCard.classList.add("show");
+      }, 250);
+    }
+
+    // Arka Plan Uçuşan Emojiler
+    const emojiler = ['😽', '❤️‍🔥', '❤️', '💙', '✨', '💖']; 
+
+    function emojiOlustur() {
+      const element = document.createElement('div');
+      element.classList.add('floating-element');
+      
+      const rastgeleEmoji = emojiler[Math.floor(Math.random() * emojiler.length)];
+      element.innerHTML = rastgeleEmoji;
+
+      element.style.left = Math.random() * 100 + 'vw';
+
+      const rastgeleBoyut = Math.random() * 20 + 22;
+      element.style.fontSize = rastgeleBoyut + 'px';
+
+      const rastgeleSüre = Math.random() * 3 + 4;
+      element.style.animationDuration = rastgeleSüre + 's';
+
+      document.body.appendChild(element);
+
+      setTimeout(() => {
+        element.remove();
+      }, rastgeleSüre * 1000);
+    }
+
+    setInterval(emojiOlustur, 300);
+  </script>
+
+</body>
+</html>
