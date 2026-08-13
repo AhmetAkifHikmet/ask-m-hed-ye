@@ -92,7 +92,7 @@
       visibility: hidden;
     }
 
-       .note-card.show {
+    .note-card.show {
       opacity: 1;
       transform: translateY(0);
       visibility: visible;
@@ -106,12 +106,12 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
-    /* Sürpriz Görsel: Sağa esnemeyi tamamen durdurur */
+    /* Sürpriz Görsel */
     .surprise-image {
       width: 100%;
       max-width: 100%;
       max-height: 240px;
-      object-fit: cover; /* Resmi oranını bozmadan sığdırır */
+      object-fit: cover;
       border-radius: 14px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
       display: none;
@@ -138,6 +138,27 @@
 
     .btn:active {
       transform: translateY(1px);
+    }
+
+    /* Gizli Buton Stili */
+    .gizli-btn {
+      display: none;
+      background: linear-gradient(45deg, #f093fb, #f5576c);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 0 15px rgba(245, 87, 108, 0.6);
+      animation: pulseAnim 1.5s infinite alternate;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(245, 87, 108, 0.5); }
+      100% { transform: scale(1.05); box-shadow: 0 0 20px rgba(245, 87, 108, 0.9); }
     }
 
     .floating-element {
@@ -170,7 +191,7 @@
 <body>
 
   <div class="container">
-    <h1>Günün Sürprizi 🎁</h1>
+    <h1>Doğum günün kutlu olsun Meleğimmm 🎁</h1>
     <p class="subtitle">Nasipte Varsa.... eeee bu Kadar</p>
 
     <div class="box-wrapper">
@@ -178,6 +199,8 @@
     </div>
 
     <button class="btn" onclick="surprizGetir()">Nasibini Gömçür ✨</button>
+
+    <button class="gizli-btn" id="gizliBtn" onclick="gizliMesajiGoster()">🔐 Gizli Mesajı Aç ✨</button>
 
     <div class="note-card" id="noteCard">
       <p class="note-text" id="noteText">Açmak için kutuya tıkla veya butona bas!</p>
@@ -414,12 +437,12 @@
     // 3. Notlar Listesi
     const notlar = [
       "Günün hatırlatması: Sen dünyadaki en tatlı insansın! 💕",
-      "Bugün kendine güzel bir kahve ısmarla ve gülümsemeyi unutma. ☕✨",
-      "Birlikte geçirdiğimiz ilk günü dün gibi hatırlıyorum, iyi ki hayatımdasın. 🌸",
+      "Seni seçmek değil, sende kalmak istiyorum.✨",
+      "Birlikte geçirdiğimiz ilk günü dün gibi hatırlıyorum, iyi ki hayatımdasın sevgilim. 🌸",
       "Bugün seni ekstra çok seviyorum! (Yarın daha da çok seveceğim) 🐻❤️",
-      "Birlikte en son ne zaman tatlı yemiştik? Bence bugün bir tatlı kaçamağı yapmalıyız! 🍰",
-      "Seninle gülmek, günün en güzel anı. 😊",
-      "Günün mesajı: Bugün karşılaştığın tüm zorlukları tereyağından kıl çeker gibi halledeceksin! 💪✨",
+      "Dokunuşların bedenimi gülüşün ruhumu gençleştiriyor",
+      "Seni mutlu görmek ömrümüme ömür katyor 😊",
+      "Günün mesajı: Bugün karşılaştığın tüm zorlukları tereyağından kıl çeker gibi halledeceksin! ✨",
       "Şu an bu nota bakıyorsun ya, bil ki tam şu an seni düşünüyorum. 💭💖",
       "Memelerin Çok Güzel helelelele",
       "Seni sevmek ölümse koyam götüne gülümse:D",
@@ -427,13 +450,24 @@
       "Seni ölene kadar seveceğim Kalbimin tek Sahibi💕❤️‍🔥",
       "Yine Çok güzelsin yerim hamm",
       "Hayatımın ışık kaynağısınnnn",
-
+      "Doğum günün kutlu olsun Kalbimin Tek sahibi",
+      "Sensiz yaşayamıyorum çünkü hayatıumın güneşi sensin ",
+      "Haklı çıkmak değil, sana iyi gelmek istiyorum."
 
     ];
 
     let sonSecimTuru = -1;
+    let tiklamaSayaci = 0; // Tıklama sayacı
 
     function surprizGetir() {
+      // Tıklama sayısını artır
+      tiklamaSayaci++;
+
+      // 5 Defa tıklandığında gizli butonu görünür yap
+      if (tiklamaSayaci >= 5) {
+        document.getElementById("gizliBtn").style.display = "inline-block";
+      }
+
       const noteCard = document.getElementById("noteCard");
       const noteText = document.getElementById("noteText");
       const surpriseImg = document.getElementById("surpriseImg");
@@ -448,7 +482,6 @@
       noteCard.classList.remove("show");
 
       setTimeout(() => {
-        // 3 Seçenek Arasında Rastgele Seçim (0: Not, 1: Kedi, 2: Biz)
         let secim;
         do {
           secim = Math.floor(Math.random() * 3);
@@ -456,29 +489,42 @@
         sonSecimTuru = secim;
 
         if (secim === 0) {
-          // NOT ÇIKMA MANTIĞI
           const yeniNotIndex = Math.floor(Math.random() * notlar.length);
           noteText.textContent = notlar[yeniNotIndex];
           noteText.style.display = "block";
           surpriseImg.style.display = "none";
         } 
         else if (secim === 1) {
-          // KEDİ ÇIKMA MANTIĞI
           const yeniKediIndex = Math.floor(Math.random() * kedilerResimleri.length);
           noteText.textContent = "Günün Kedisi! 🐾";
           noteText.style.display = "block";
-          surpriseImg.src = kedilerResimleri[yeniKediIndex];
+          surpriseImg.src = encodeURI(kedilerResimleri[yeniKediIndex]);
           surpriseImg.style.display = "block";
         } 
         else {
-          // BİZ ÇIKMA MANTIĞI
           const yeniBizIndex = Math.floor(Math.random() * bizResimleri.length);
           noteText.textContent = "En Güzel Anılarımızdan Biri... 📸💖";
           noteText.style.display = "block";
-          surpriseImg.src = bizResimleri[yeniBizIndex];
+          surpriseImg.src = encodeURI(bizResimleri[yeniBizIndex]);
           surpriseImg.style.display = "block";
         }
 
+        noteCard.classList.add("show");
+      }, 250);
+    }
+
+    // Gizli Mesaj Fonksiyonu
+    function gizliMesajiGoster() {
+      const noteCard = document.getElementById("noteCard");
+      const noteText = document.getElementById("noteText");
+      const surpriseImg = document.getElementById("surpriseImg");
+
+      noteCard.classList.remove("show");
+
+      setTimeout(() => {
+        noteText.textContent = "Gizli mesaj.....Aşkım sen başıma gelmiş en güzel olaysın iyiki benden önce bize ilk adımı(sürpriz yumurta gibi girdin hayatıma) sen attın senin çabalaman bana umut sevgi ve en önemlisi bana değer verilmiş hissi veriyor seni mutlu etmek için elimden geleni yapıcam çok ters bi zamanda tanışmamıza rağmen beni kırmayıp sevmediğin şeyler yaparak bana ayak uydurduğnu biliyorum ilk defa biri tarafından anlaşılmış değer verilmiş hissediyorum ve bu beni ağlatacak derecede mutlu ediyor bende aynısını senin için yapmaya çalışıyorum seni kalbimden bir parça olarak görüyorum bu zamanlarda geçicek hep birbirimizin yanında olucaz  seni sonsuza kadar seveceğim allah nasip ederse gelecekte hep seninle yan yana olmak seninle evlenmek istiyorum iyi varsın iyiki sevgiliyiz seni çoook seviyorum ve sevmeye devam edeceğim Doğum gününn kutlu olsun kalbimin sahibi ❤️✨";
+        noteText.style.display = "block";
+        surpriseImg.style.display = "none";
         noteCard.classList.add("show");
       }, 250);
     }
@@ -495,7 +541,7 @@
 
       element.style.left = Math.random() * 100 + 'vw';
 
-      const rastgeleBoyut = Math.random() * 20 + 55;
+      const rastgeleBoyut = Math.random() * 20 + 33;
       element.style.fontSize = rastgeleBoyut + 'px';
 
       const rastgeleSüre = Math.random() * 3 + 4;
