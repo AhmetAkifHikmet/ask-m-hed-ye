@@ -494,14 +494,14 @@
           const yeniKediIndex = Math.floor(Math.random() * kedilerResimleri.length);
           noteText.textContent = "Günün Kedisi! 🐾";
           noteText.style.display = "block";
-          surpriseImg.src = encodeURI(kedilerResimleri[yeniKediIndex]);
+          surpriseImg.src = encodeURIComponent(kedilerResimleri[yeniKediIndex]).replace(/%2F/g, "/");          
           surpriseImg.style.display = "block";
         } 
         else {
           const yeniBizIndex = Math.floor(Math.random() * bizResimleri.length);
           noteText.textContent = "En Güzel Anılarımızdan Biri... 📸💖";
           noteText.style.display = "block";
-          surpriseImg.src = encodeURI(bizResimleri[yeniBizIndex]);
+          surpriseImg.src = encodeURIComponent(bizResimleri[yeniBizIndex]).replace(/%2F/g, "/");
           surpriseImg.style.display = "block";
         }
 
