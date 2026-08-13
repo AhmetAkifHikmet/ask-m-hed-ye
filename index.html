@@ -24,7 +24,7 @@
       position: relative;
     }
 
-    /* Ana Kutu: Ekrandaki zıplamaları ve kaymaları önler */
+    /* Ana Kutu */
     .container {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -106,7 +106,6 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
-    /* Sürpriz Görsel */
     .surprise-image {
       width: 100%;
       max-width: 100%;
@@ -140,7 +139,6 @@
       transform: translateY(1px);
     }
 
-    /* Gizli Buton Stili */
     .gizli-btn {
       display: none;
       background: linear-gradient(45deg, #f093fb, #f5576c);
@@ -175,12 +173,8 @@
         transform: translateY(0) rotate(0deg) scale(0.8);
         opacity: 0;
       }
-      10% {
-        opacity: 0.9;
-      }
-      90% {
-        opacity: 0.9;
-      }
+      10% { opacity: 0.9; }
+      90% { opacity: 0.9; }
       100% {
         transform: translateY(-110vh) rotate(360deg) scale(1.3);
         opacity: 0;
@@ -209,7 +203,7 @@
   </div>
 
   <script>
-    // 1. Kediler Görselleri (Klasör yolu kaldırıldı)
+    // 1. Kediler Görselleri
     const kedilerResimleri = [
       "WhatsApp Image 2026-08-12 at 11.03.03 (1).jpeg",
       "WhatsApp Image 2026-08-12 at 11.03.03 (2).jpeg",
@@ -349,7 +343,7 @@
       "WhatsApp Image 2026-08-12 at 11.05.04.jpeg"
     ];
 
-    // 2. Biz Görselleri (Klasör yolu kaldırıldı)
+    // 2. Biz Görselleri ('ben' klasör yolu dahil edilerek yenilendi)
     const bizResimleri = [
       // 12.08.19 Grubu
       "WhatsApp Image 2026-08-12 at 12.08.19 (1).jpeg",
@@ -431,7 +425,19 @@
       "WhatsApp Image 2026-08-12 at 13.27.14 (3).jpeg",
       "WhatsApp Image 2026-08-12 at 13.27.14 (4).jpeg",
       "WhatsApp Image 2026-08-12 at 13.27.14.jpeg",
-      "WhatsApp Image 2026-08-12 at 13.27.15.jpeg"
+      "WhatsApp Image 2026-08-12 at 13.27.15.jpeg",
+
+      // 💥 YENİ EKLENEN 'ben' KLASÖRÜNDEKİ RESİMLER:
+      "ben/WhatsApp Image 2026-08-13 at 15.32.40 (1).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.32.40 (2).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.32.40.jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.32.41 (1).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.32.41 (2).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.32.41.jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.34.18.jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.34.19 (1).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.34.19 (2).jpeg",
+      "ben/WhatsApp Image 2026-08-13 at 15.34.19.jpeg"
     ];
 
     // 3. Notlar Listesi
@@ -441,17 +447,17 @@
       "Birlikte geçirdiğimiz ilk günü dün gibi hatırlıyorum, iyi ki hayatımdasın sevgilim. 🌸",
       "Bugün seni ekstra çok seviyorum! (Yarın daha da çok seveceğim) 🐻❤️",
       "Dokunuşların bedenimi gülüşün ruhumu gençleştiriyor",
-      "Seni mutlu görmek ömrümüme ömür katyor 😊",
+      "Seni mutlu görmek ömrümüme ömür katıyor 😊",
       "Günün mesajı: Bugün karşılaştığın tüm zorlukları tereyağından kıl çeker gibi halledeceksin! ✨",
       "Şu an bu nota bakıyorsun ya, bil ki tam şu an seni düşünüyorum. 💭💖",
       "Memelerin Çok Güzel helelelele",
       "Seni sevmek ölümse koyam götüne gülümse:D",
-      "Bana dünyadaki tüm çicekleri sunsalar yinede senin gözlerindeki baharı seçerim💖",
+      "Bana dünyadaki tüm çiçekleri sunsalar yinede senin gözlerindeki baharı seçerim💖",
       "Seni ölene kadar seveceğim Kalbimin tek Sahibi💕❤️‍🔥",
       "Yine Çok güzelsin yerim hamm",
       "Hayatımın ışık kaynağısınnnn",
       "Doğum günün kutlu olsun Kalbimin Tek sahibi",
-      "Sensiz yaşayamıyorum çünkü hayatıumın güneşi sensin ",
+      "Sensiz yaşayamıyorum çünkü hayatımın güneşi sensin ",
       "Haklı çıkmak değil, sana iyi gelmek istiyorum."
     ];
 
